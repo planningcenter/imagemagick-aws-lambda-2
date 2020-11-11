@@ -33,20 +33,7 @@ prep-binaries:
 	# would cause all these to get packaged as individual files.
 	# (https://github.com/aws/aws-cli/issues/2900)
 
-	mv imagemagick/bin/magick imagemagick/bin/convert || true
-	rm imagemagick/bin/animate || true
-	rm imagemagick/bin/compare || true
-	rm imagemagick/bin/composite || true
-	rm imagemagick/bin/conjure || true
-	rm imagemagick/bin/display || true
-	rm imagemagick/bin/import || true
-	rm imagemagick/bin/magick-script || true
-	rm imagemagick/bin/mogrify || true
-	rm imagemagick/bin/montage || true
-	rm imagemagick/bin/stream || true
-	rm imagemagick/bin/identify || true
-	rm -rf imagemagick/share || true
-	zip -r $(PROJECT_ROOT)build/layer.zip imagemagick
+	zip --symlinks -r $(PROJECT_ROOT)build/layer.zip imagemagick
 
 build/output.yaml: template.yaml
 	aws cloudformation package --template $< --s3-bucket $(SAM_PIPELINE_ARTIFACTS_BUCKET) --output-template-file $@ --region us-east-1
