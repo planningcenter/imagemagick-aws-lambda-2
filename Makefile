@@ -24,6 +24,7 @@ all libs:
 
 
 STACK_NAME ?= lambda-layer-imagemagick
+SAM_PIPELINE_ARTIFACTS_BUCKET ?= pco-sam-pipeline-artifacts
 
 result/bin/identify: all
 
@@ -48,8 +49,8 @@ prep-binaries:
 	zip -r $(PROJECT_ROOT)build/layer.zip imagemagick
 
 build/output.yaml: template.yaml
-	aws cloudformation package --template $< --s3-bucket pco-sam-pipeline-artifacts --output-template-file $@
+	aws cloudformation package --template $< --s3-bucket $(SAM_PIPELINE_ARTIFACTS_BUCKET) --output-template-file $@ --region us-east-1
 
 deploy: prep-binaries build/output.yaml
-	aws cloudformation deploy --template build/output.yaml --stack-name $(STACK_NAME)
-	aws cloudformation describe-stacks --stack-name $(STACK_NAME) --query Stacks[].Outputs --output table
+	aws cloudformation deploy --template build/output.yaml --stack-name $(STACK_NAME) --region us-east-1
+	aws cloudformation describe-stacks --stack-name $(STACK_NAME) --query Stacks[].Outputs --output table --region us-east-1
